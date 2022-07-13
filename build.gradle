@@ -1,0 +1,55 @@
+plugins {
+	id "eclipse"
+	id "idea"
+	id "jacoco"
+	id "org.springframework.boot" version "${springBootVersion}"
+	id "io.spring.dependency-management" version "${springDependencyManagement}"
+	id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
+	id "org.jetbrains.kotlin.plugin.spring" version "${kotlinVersion}"
+}
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+group = "io.tech.camunda"
+version = "0.0.1-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_17
+
+repositories {
+	mavenCentral()
+	maven {
+		url = 'https://artifacts.camunda.com/artifactory/public/'
+	}
+}
+
+// lint configs
+apply from: rootProject.file("lint-config.gradle")
+
+
+dependencies {
+	// Spring
+	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	// Kotlin
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("io.github.microutils:kotlin-logging-jvm:${loggerVersion}")
+
+	// Camunda
+	implementation("org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp:${camundaVersion}")
+	implementation("com.h2database:h2:2.1.214")
+	implementation("com.sun.xml.bind:jaxb-impl:2.3.5")
+}
+
+
+compileKotlin {
+	kotlinOptions {
+		allWarningsAsErrors = true
+		freeCompilerArgs = ["-Xjsr305=strict"]
+		jvmTarget = "17"
+	}
+}
