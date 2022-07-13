@@ -1,1 +1,1 @@
-rootProject.name = "playground"
+rootProject.name = "camunda-playground"
